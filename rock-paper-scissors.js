@@ -89,6 +89,3 @@ function game() {
         console.log("This game was a draw! Play again!");
     }
 }
-
-
-
