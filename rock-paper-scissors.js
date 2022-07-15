@@ -1,7 +1,25 @@
 /* This program is to simulate rock paper scissors using the Javascript console. */
 
-// Run the game.
-game();
+// Declare constants.
+const RequiredWins = 5;
+
+// Declare variables.
+let playerWins = 0;
+let computerWins = 0;
+let totalGames = 0;
+let result = "";
+let computerSelection;
+let gameOver = false;
+let rock = document.getElementById('rock');
+let paper = document.getElementById('paper');
+let scissors = document.getElementById('scissors');
+let gameResult = document.getElementById('game-result');
+let scoreboard = document.getElementById('scoreboard');
+
+// Create event handlers for buttons.
+rock.addEventListener('click', playRound);
+paper.addEventListener('click', playRound);
+scissors.addEventListener('click', playRound);
 
 // Determine the computer's choice of rock/paper/scissors.
 function computerPlay() {
@@ -13,10 +31,9 @@ function computerPlay() {
 }
 
 // Function to determine and return the winner of the match.
-function playRound(playerSelection, computerSelection) {
-    playerSelection = playerSelection.toLowerCase();
-
-    let result = "";
+function playRound(event) {
+    playerSelection = event.target.value;
+    computerSelection = computerPlay();
 
     if (playerSelection === computerSelection) {
         result = "Draw";
@@ -31,61 +48,63 @@ function playRound(playerSelection, computerSelection) {
         || playerSelection === "paper" && computerSelection === "scissors") {
         result = "Computer";
     }
-    else {
-        result = "Invalid";
-    }
 
-    return result;
+    // Track and display overall game state.
+    game();
+
 }
 
-// The main function which runs the game, and tracks/displays results.
+// Function to track and display game scores and results.
 function game() {
 
-    // Declare variables to track player and computer wins.
-    let playerWins = 0;
-    let computerWins = 0;
-
-    for (let i = 1; i <= 5; i++) {
-        // Prompt the player for their choice and set the computer's choice.
-        let playerSelection = prompt("Type rock, paper or scissors.");
-        let computerSelection = computerPlay();
-
-        // Play the round using the player and computer's choices.
-        let result = playRound(playerSelection, computerSelection);
-
-        // Save the round's result to display and increment the winner's counter.
-        let displayResult = "";
-        if (result === "Draw") {
-            displayResult = "Draw!";
-        }
-        else if (result === "Player") {
-            displayResult = "You win!";
-            playerWins++;
-        }
-        else if (result === "Computer") {
-            displayResult = "You lose!";
-            computerWins++;
-        }
-        else if (result === "Invalid") {
-            displayResult = "Invalid input!";
-            i--;
-        }
-
-        // Display the round's results to the player.
-        console.log(`${displayResult} You chose ${playerSelection}. The computer chose ${computerSelection}.`);
-
-        // Display the overall game's scoreboard.
-        console.log(`Current Wins: ${playerWins}, Current Losses: ${computerWins}, Total games: ${i}`);
+    // Save the round's result to display and increment the winner's counter.
+    let displayResult = "";
+    if (result === "Draw") {
+        displayResult = "Draw!";
+    }
+    else if (result === "Player") {
+        displayResult = "You win!";
+        playerWins++;
+    }
+    else if (result === "Computer") {
+        displayResult = "You lose!";
+        computerWins++;
     }
 
-    // Display the results of the overall game.
-    if (playerWins > computerWins) {
-        console.log("You win the game! Congratulations!");
+    // Increment total games played.
+    totalGames++;
+
+    // Display the round's results.
+    gameResult.textContent = `${displayResult} You chose ${playerSelection}.
+        The computer chose ${computerSelection}.`;
+
+    // Display the overall game's scoreboard.
+    scoreboard.textContent = `Current Wins: ${playerWins},
+        Current Losses: ${computerWins}, Total games: ${totalGames}`;
+
+    // Check if either the player or computer reached the point limit,
+    // winning the game. If the game is finished, display the results
+    // and set game over to true.
+    if (playerWins === RequiredWins) {
+        scoreboard.textContent = `You win the game! Congratulations! 
+            Your score was ${playerWins},
+            the computer's score was ${computerWins}.
+            Click rock/paper/scissors to play again.`;
+        gameOver = true;
     }
-    else if (computerWins > playerWins) {
-        console.log("The computer wins the game! Better luck next time!");
+    else if (computerWins === RequiredWins) {
+        scoreboard.textContent = `The computer wins the game! Better luck next time!
+            Your score was ${playerWins},
+            the computer's score was ${computerWins}.
+            Click rock/paper/scissors to play again.`;
+        gameOver = true;
     }
-    else {
-        console.log("This game was a draw! Play again!");
+
+    // If the game is finished, reset the scores.
+    if (gameOver === true) {
+        playerWins = 0;
+        computerWins = 0;
+        totalGames = 0;
+        gameOver = false;
     }
 }
