@@ -1,4 +1,4 @@
-/* This program is to simulate rock paper scissors using the Javascript console. */
+/* This program is to simulate rock paper scissors in the browser. */
 
 // Declare constants.
 const RequiredWins = 5;
@@ -71,7 +71,6 @@ function game() {
         computerWins++;
     }
 
-    // Increment total games played.
     totalGames++;
 
     // Display the round's results.
